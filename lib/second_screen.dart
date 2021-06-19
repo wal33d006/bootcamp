@@ -6,8 +6,12 @@ import 'package:http/http.dart' as http;
 
 class SecondScreen extends StatefulWidget {
   final String name;
+  final VoidCallback onPressed;
 
-  SecondScreen({required this.name});
+  SecondScreen({
+    required this.name,
+    required this.onPressed,
+  });
 
   @override
   _SecondScreenState createState() => _SecondScreenState();
@@ -48,6 +52,12 @@ class _SecondScreenState extends State<SecondScreen> {
                 );
               },
             ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          widget.onPressed();
+        },
+        child: Icon(Icons.add),
+      ),
     );
   }
 

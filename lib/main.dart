@@ -22,7 +22,9 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.blue,
+        primaryColor: Colors.red,
+        accentColor: Colors.green,
+        primaryColorDark: Colors.deepPurpleAccent,
       ),
       home: MyHomePage(title: 'Session 01'),
     );
@@ -80,7 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Text(
               '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+              style: Theme.of(context).textTheme.headline3,
             ),
             ListTile(
               title: Text('Waleed'),
@@ -111,6 +113,9 @@ class _MyHomePageState extends State<MyHomePage> {
             MaterialPageRoute(
               builder: (context) => SecondScreen(
                 name: textController.text,
+                onPressed: () {
+                  _incrementCounter();
+                },
               ),
             ),
           );
