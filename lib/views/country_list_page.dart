@@ -1,8 +1,8 @@
-import 'dart:convert';
-
-import 'package:bootcamp/country_model.dart';
+import 'package:bootcamp/views/country_detail.dart';
+import 'package:bootcamp/models/country_model.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+
+import '../controllers/api_controller.dart';
 
 class SecondScreen extends StatefulWidget {
   final String name;
@@ -49,6 +49,13 @@ class _SecondScreenState extends State<SecondScreen> {
                   leading: CircleAvatar(
                     child: Text(firstLetter),
                   ),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => CountryDetail(countryName: country.country!),
+                      ),
+                    );
+                  },
                 );
               },
             ),
@@ -65,12 +72,9 @@ class _SecondScreenState extends State<SecondScreen> {
     isLoading = true;
     setState(() {});
     try {
-      var url = Uri.parse('https://coronavirus-19-api.herokuapp.com/countries');
-      var response = await http.get(url);
-      print(response.body);
-      var list = jsonDecode(response.body) as List;
-      var countryList = list.map((e) => Country.fromJson(e)).toList();
-      countries.addAll(countryList);
+      ApiController api = ApiController();
+      var list = await api.fetchCountries();
+      countries.addAll(list);
     } catch (ex) {
       print(ex);
     } finally {
