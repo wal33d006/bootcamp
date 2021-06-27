@@ -2,11 +2,57 @@ import 'package:bootcamp/views/country_list_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+final darkTheme = ThemeData(
+  primarySwatch: Colors.grey,
+  primaryColor: Colors.black,
+  brightness: Brightness.dark,
+  backgroundColor: const Color(0xFF212121),
+  accentColor: Colors.yellow[700],
+  accentIconTheme: IconThemeData(color: Colors.black),
+  dividerColor: Colors.black12,
+);
+
+final lightTheme = ThemeData(
+  primarySwatch: Colors.grey,
+  primaryColor: Colors.white,
+  brightness: Brightness.light,
+  backgroundColor: const Color(0xFFE5E5E5),
+  accentColor: Colors.black,
+  accentIconTheme: IconThemeData(color: Colors.white),
+  dividerColor: Colors.white54,
+);
+
+class ThemeNotifier with ChangeNotifier {
+  ThemeData? _themeData;
+
+  ThemeNotifier(this._themeData);
+
+  getTheme() => _themeData;
+
+//  getTheme() {
+//    return _themeData;
+//  }
+
+  setTheme(ThemeData themeData) async {
+    _themeData = themeData;
+    notifyListeners();
+  }
+}
+
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => Counter(),
+    MultiProvider(
       child: MyApp(),
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => Counter(),
+          child: MyApp(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ThemeNotifier(lightTheme),
+          child: MyApp(),
+        ),
+      ],
     ),
   );
 }
@@ -16,11 +62,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primaryColor: Colors.red,
-        accentColor: Colors.green,
-        primaryColorDark: Colors.deepPurpleAccent,
-      ),
+      theme: context.watch<ThemeNotifier>()._themeData,
       home: MyHomePage(title: 'Session 01'),
     );
   }
@@ -56,9 +98,22 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    var themeData = context.watch<ThemeNotifier>();
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        actions: [
+          Switch(
+            value: themeData._themeData == darkTheme,
+            onChanged: (value) {
+              if (value) {
+                themeData.setTheme(darkTheme);
+              } else {
+                themeData.setTheme(lightTheme);
+              }
+            },
+          ),
+        ],
       ),
       body: Center(
         child: Column(
